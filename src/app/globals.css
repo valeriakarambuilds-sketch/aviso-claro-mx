@@ -694,3 +694,47 @@ footer p {
     margin: 20mm;
   }
 }
+
+.reference-trigger {
+  border: 0;
+  background: transparent;
+  color: #086963;
+  padding: 6px 0;
+  font-size: 13px;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.reference-panel {
+  margin-top: 14px;
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--teal);
+  border-left: 4px solid var(--teal);
+  border-radius: 8px;
+  scroll-margin: 16px;
+}
+.reference-panel:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+}
+.sentence .reference-panel p {
+  font-size: 12px;
+  color: var(--muted);
+}
+.sentence .reference-panel .eyebrow {
+  font-size: 10px;
+  color: var(--teal);
+}
+.reference-panel dl {
+  font-size: 14px;
+  margin: 16px 0;
+}
+.reference-panel dt {
+  font-weight: 700;
+  margin-top: 12px;
+}
+.reference-panel dd {
+  margin: 4px 0 0;
+  color: var(--muted);
+}

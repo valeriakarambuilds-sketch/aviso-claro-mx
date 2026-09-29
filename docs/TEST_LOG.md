@@ -48,3 +48,15 @@ Solo pruebas locales con datos ficticios. No se ha publicado ni realizado la pru
 
 ## Pendiente externo
 Dos despliegues y retest público (publicación aplazada por la usuaria), prueba de persona en chat nuevo, comparación con plantilla estática, grabación, PDFs de entrega y exportación íntegra de la conversación. No se afirma que estas actividades hayan ocurrido.
+
+## 29/09/2026 — referencias desplegables en Revisión
+
+**Fallo reproducido sobre `cadb9d9`.** Se seleccionó el caso A, se preparó el borrador, se entró a Revisión y se marcó una frase. La nueva prueba hizo clic en A_LOGIN y A_INVESTIGATION («Ver respaldo ficticio») y A_IMPACT («Estado sin confirmar»). Ninguno mostró un panel: las tres comprobaciones de región visible fallaron. La URL terminó en `/#evidence-A_IMPACT`. La ejecución inicial dentro del sandbox no pudo acceder al puerto local; la reproducción real se hizo con Playwright fuera del sandbox.
+
+**Causa.** Las referencias eran elementos `<a href="#evidence-ID">` dirigidos a tarjetas existentes en la columna de evidencia. Solo navegaban al ancla; no había estado de apertura, panel de detalle ni explicación específica. La prueba anterior recorría la revisión sin hacer clic en esas referencias, por lo que no detectó esta carencia.
+
+**Corrección.** `EvidenceReference` sustituye el enlace por un botón que despliega un panel junto a su frase. Incluye ID, tipo de evidencia, fuente ficticia, estado vigente y explicación de qué permite afirmar o qué sigue sin confirmar. Si se retiró el respaldo, distingue la fuente original del estado actual y explica que ya no sostiene la afirmación. No consulta archivos reales ni autentica fuentes. El control usa `aria-expanded`/`aria-controls`, lleva el foco al panel visible y lo devuelve al botón al cerrar. El estado de apertura es independiente de las casillas, la aprobación y la versión; no modifica la URL. Cambiar evidencia o regenerar sigue invalidando la revisión como antes.
+
+**Regresión.** `tests/e2e/references.spec.ts` recorre las siete referencias de A/B/C, comprueba título, fuente, estado y explicación en el panel, que su encabezado quede en el viewport, cierre con devolución de foco y apertura por teclado. Verifica conservación de revisión parcial, versión, URL y aprobación completa con exportación habilitada. También cubre A_LOGIN con respaldo retirado y exportación aún bloqueada. Se ejecuta en escritorio y viewport móvil con Chromium.
+
+**Resultados.** 33/33 pruebas Vitest y 14/14 pruebas Playwright aprobadas (6 anteriores + 8 nuevas). Build de producción, TypeScript y `git diff --check` correctos. Las seis capturas del flujo se actualizaron durante la pasada de navegador. Sin llamadas reales a Gemini, push ni publicación. Aplicación local en http://127.0.0.1:3000 .

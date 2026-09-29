@@ -19,6 +19,7 @@ import {
   type State,
 } from "../domain/workflow";
 import { printHtml } from "../domain/print";
+import { EvidenceReference } from "../components/EvidenceReference";
 const events = {
   login: "Acceso no reconocido",
   investigation: "Investigación iniciada",
@@ -414,15 +415,22 @@ export default function Home() {
                     </div>
                     <div className="notice">
                       {state.draft?.sentences.map((s) => (
-                        <div className="sentence" key={s.id}>
+                        <div
+                          className="sentence"
+                          key={`${state.version}-${s.id}`}
+                        >
                           <p>{catalog[s.id].text}</p>
-                          <a href={`#evidence-${s.evidenceIds[0]}`}>
-                            {s.evidenceIds[0]} ·{" "}
-                            {catalog[s.id].certainty === "unknown"
-                              ? "Estado sin confirmar"
-                              : "Ver respaldo ficticio"}{" "}
-                            ↗
-                          </a>
+                          {evidence
+                            .filter((e) => e.id === s.evidenceIds[0])
+                            .map((e) => (
+                              <EvidenceReference
+                                key={e.id}
+                                evidence={e}
+                                title={events[e.event]}
+                                source={sources[e.source]}
+                                withheld={state.input.withheld.includes(e.id)}
+                              />
+                            ))}
                           {step === 3 && (
                             <label className="check small">
                               <input

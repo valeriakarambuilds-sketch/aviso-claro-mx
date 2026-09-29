@@ -37,3 +37,14 @@ Commit these documents before implementation, then give docs/IMPLEMENTATION_PROM
 ## Primer movimiento de la siguiente sesión
 
 Abrir la aplicación local y usar las seis capturas en un chat nuevo para la prueba de Mariana descrita en el packet; registrar sus respuestas reales y el principal malentendido antes de cambiar la interfaz. Publicar y realizar las dos comprobaciones de despliegue solo cuando la usuaria lo solicite. No se reclama ninguna URL pública ni ahorro de tiempo.
+
+## 29 de septiembre de 2026 — apertura de referencias
+
+- Las referencias de Borrador/Revisión ahora abren un panel dentro de la misma frase, en lugar de navegar a un ancla de la columna lateral. Muestran evidencia ficticia, fuente, estado vigente y explicación del límite de esa evidencia.
+- Consultar o cerrar un respaldo no es una edición: conserva casillas, aprobación y versión. El panel tiene estado local independiente; cambiar evidencia o regenerar continúa borrando la aprobación. Una fuente retirada se identifica explícitamente y se muestra con estado Sin confirmar.
+- Se reprodujo el fallo original en las tres referencias de A antes de corregirlo. La regresión cubre cada referencia de A/B/C, teclado, panel visible en escritorio/móvil y respaldo retirado. Resultado: 33 pruebas de lógica/API y 14 de navegador aprobadas, más build y TypeScript correctos. Detalle en TEST_LOG.md.
+- Sin publicación ni push. IA real desactivada. Se deja el servidor de producción local en http://127.0.0.1:3000 para que la usuaria repita la prueba.
+
+### Primer movimiento siguiente
+
+Repetir manualmente en Revisión los clics «Ver respaldo ficticio» y «Estado sin confirmar», también después de aprobar el aviso: el panel debe mostrar el detalle y la aprobación debe conservarse. Después continuar con la prueba de Mariana en chat separado. Los despliegues siguen aplazados hasta que la usuaria los solicite.
