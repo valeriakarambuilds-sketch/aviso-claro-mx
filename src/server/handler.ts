@@ -1,3 +1,42 @@
-import {inputSchema} from '../domain/evidence';
-import {boundedText,generateNotice} from './adapter';
-export async function handleDraft(request:Request){const reply=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});if(request.method!=='POST')return reply({error:'Usa POST.'},405);if(request.headers.get('origin')!==new URL(request.url).origin)return reply({error:'Origen no permitido.'},403);if(request.headers.get('content-type')?.split(';')[0].trim()!=='application/json')return reply({error:'Se requiere JSON.'},415);if(Number(request.headers.get('content-length')??0)>1024)return reply({error:'Solicitud demasiado grande.'},413);let raw:unknown;try{const text=await boundedText(new Response(request.body),1024);raw=JSON.parse(text);}catch{return reply({error:'JSON inválido o solicitud demasiado grande.'},400);}const parsed=inputSchema.safeParse(raw);if(!parsed.success)return reply({error:'Solo se permiten los casos y opciones ficticios del catálogo.'},400);return reply(await generateNotice(parsed.data,{key:process.env.GEMINI_API_KEY,model:process.env.GEMINI_MODEL,enabled:process.env.GEMINI_ENABLED}));}
+import { inputSchema } from "../domain/evidence";
+import { boundedText, generateNotice } from "./adapter";
+export async function handleDraft(request: Request) {
+  const reply = (data: unknown, status = 200) =>
+    Response.json(data, { status, headers: { "Cache-Control": "no-store" } });
+  if (request.method !== "POST") return reply({ error: "Usa POST." }, 405);
+  // Next may use an internal hostname in request.url. Host is the browser's
+  // actual destination; do not accept arbitrary X-Forwarded-Host values.
+  const destination = new URL(request.url);
+  destination.host = request.headers.get("host") ?? destination.host;
+  if (request.headers.get("origin") !== destination.origin)
+    return reply({ error: "Origen no permitido." }, 403);
+  if (
+    request.headers.get("content-type")?.split(";")[0].trim() !==
+    "application/json"
+  )
+    return reply({ error: "Se requiere JSON." }, 415);
+  if (Number(request.headers.get("content-length") ?? 0) > 1024)
+    return reply({ error: "Solicitud demasiado grande." }, 413);
+  let raw: unknown;
+  try {
+    const text = await boundedText(new Response(request.body), 1024);
+    raw = JSON.parse(text);
+  } catch {
+    return reply({ error: "JSON inválido o solicitud demasiado grande." }, 400);
+  }
+  const parsed = inputSchema.safeParse(raw);
+  if (!parsed.success)
+    return reply(
+      {
+        error: "Solo se permiten los casos y opciones ficticios del catálogo.",
+      },
+      400,
+    );
+  return reply(
+    await generateNotice(parsed.data, {
+      key: process.env.GEMINI_API_KEY,
+      model: process.env.GEMINI_MODEL,
+      enabled: process.env.GEMINI_ENABLED,
+    }),
+  );
+}

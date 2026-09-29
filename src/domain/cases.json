@@ -1,6 +1,82 @@
 [
- {"id":"A","fictional":true,"title":"Acceso no reconocido","summary":"Un registro ficticio muestra un inicio de sesión no reconocido. Se inició una investigación; el impacto en archivos sigue sin confirmar.","evidence":[{"id":"A_LOGIN","event":"login","source":"registro","status":"confirmed"},{"id":"A_INVESTIGATION","event":"investigation","source":"proveedor","status":"confirmed"},{"id":"A_IMPACT","event":"impact","source":"ninguna","status":"unknown"}]},
- {"id":"B","fictional":true,"title":"Sospecha sin confirmar","summary":"Se reportó un posible acceso, pero no hay una fuente que lo confirme.","evidence":[{"id":"B_REPORT","event":"login","source":"reporte","status":"reported"},{"id":"B_IMPACT","event":"impact","source":"ninguna","status":"unknown"}]},
- {"id":"C","fictional":true,"title":"Un archivo consultado","summary":"Un registro ficticio indica acceso a un archivo sintético. No demuestra extracción de información.","evidence":[{"id":"C_FILE","event":"file","source":"registro","status":"confirmed"},{"id":"C_THEFT","event":"exfiltration","source":"ninguna","status":"unknown"}]},
- {"id":"D","fictional":true,"title":"Suplantación y colecta","summary":"Un reporte ficticio de suplantación para una colecta corresponde al flujo de apoyo a víctimas, no a un aviso empresarial.","evidence":[{"id":"D_REPORT","event":"impersonation","source":"reporte","status":"reported"}]}
+  {
+    "id": "A",
+    "fictional": true,
+    "title": "Acceso no reconocido",
+    "summary": "Un registro ficticio muestra un inicio de sesión no reconocido. Se inició una investigación; el impacto en archivos sigue sin confirmar.",
+    "evidence": [
+      {
+        "id": "A_LOGIN",
+        "event": "login",
+        "source": "registro",
+        "status": "confirmed"
+      },
+      {
+        "id": "A_INVESTIGATION",
+        "event": "investigation",
+        "source": "proveedor",
+        "status": "confirmed"
+      },
+      {
+        "id": "A_IMPACT",
+        "event": "impact",
+        "source": "ninguna",
+        "status": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "B",
+    "fictional": true,
+    "title": "Sospecha sin confirmar",
+    "summary": "Se reportó un posible acceso, pero no hay una fuente que lo confirme.",
+    "evidence": [
+      {
+        "id": "B_REPORT",
+        "event": "login",
+        "source": "reporte",
+        "status": "reported"
+      },
+      {
+        "id": "B_IMPACT",
+        "event": "impact",
+        "source": "ninguna",
+        "status": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "C",
+    "fictional": true,
+    "title": "Un archivo consultado",
+    "summary": "Un registro ficticio indica acceso a un archivo sintético. No demuestra extracción de información.",
+    "evidence": [
+      {
+        "id": "C_FILE",
+        "event": "file",
+        "source": "registro",
+        "status": "confirmed"
+      },
+      {
+        "id": "C_THEFT",
+        "event": "exfiltration",
+        "source": "ninguna",
+        "status": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "D",
+    "fictional": true,
+    "title": "Suplantación y colecta",
+    "summary": "Un reporte ficticio de suplantación para una colecta corresponde al flujo de apoyo a víctimas, no a un aviso empresarial.",
+    "evidence": [
+      {
+        "id": "D_REPORT",
+        "event": "impersonation",
+        "source": "reporte",
+        "status": "reported"
+      }
+    ]
+  }
 ]

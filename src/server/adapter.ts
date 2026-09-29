@@ -1,13 +1,148 @@
-import {z} from 'zod';
-import {checkDraft,draftSchema,selectDraft,inputSchema,type Input,type Draft} from '../domain/evidence';
-export const SIMULATED='IA SIMULADA - PLANTILLA DEMO';
-export const REAL='IA REAL - SOLO CASOS FICTICIOS';
-export type Result={draft:Draft;mode:typeof SIMULATED|typeof REAL;reason:string;rejected:boolean};
-type Config={key?:string;model?:string;enabled?:string;fetcher?:typeof fetch;timeout?:number};
-export async function boundedText(response:Response,max:number){if(!response.body)return '';const reader=response.body.getReader();const chunks:Uint8Array[]=[];let size=0;try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>max)throw new Error('size');chunks.push(value);}}finally{await reader.cancel();}const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}return new TextDecoder().decode(bytes);}
-export async function generateNotice(raw:Input,config:Config):Promise<Result>{const input=inputSchema.parse(raw);const fallback=(reason:string,rejected=false):Result=>({draft:checkDraft(input,selectDraft(input)),mode:SIMULATED,reason,rejected});if(config.enabled!=='true')return fallback('IA real desactivada. Se seleccionaron frases de la plantilla demo.');if(!config.key||!config.model)return fallback('Falta configuración del proveedor. Se usó la plantilla demo.');if(config.model!=='gemini-2.5-flash-lite')return fallback('Modelo fuera de la lista permitida. Se usó la plantilla demo.');
- const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),config.timeout??8000);
- try{const response=await (config.fetcher??fetch)(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':config.key},signal:controller.signal,body:JSON.stringify({systemInstruction:{parts:[{text:'Select sentence IDs and evidence IDs only from the supplied approved fictional selection. Include every supplied sentence exactly once. Return only the requested JSON structure. Never add prose or identifiers.'}]},contents:[{role:'user',parts:[{text:JSON.stringify({input,allowedSelection:selectDraft(input)})}]}],generationConfig:{responseMimeType:'application/json',responseJsonSchema:z.toJSONSchema(draftSchema),maxOutputTokens:512,temperature:0}})});
- if(response.status===429)return fallback('Cuota del proveedor agotada. Sin reintentos; se usó la plantilla demo.');if(!response.ok)return fallback('Proveedor no disponible. Se usó la plantilla demo.');
- const body=JSON.parse(await boundedText(response,16384));const text=body.candidates?.[0]?.content?.parts?.map((p:{text?:string})=>p.text??'').join('');try{return {draft:checkDraft(input,JSON.parse(text)),mode:REAL,reason:'Selección del modelo comprobada contra el catálogo. La IA no verifica las fuentes.',rejected:false};}catch{return fallback('Intento de IA rechazado: respuesta inválida o sin respaldo. Se ofrece una plantilla segura.',true);}
- }catch{return fallback(controller.signal.aborted?'Se agotó el tiempo de espera. Se usó la plantilla demo.':'Respuesta del proveedor inválida o conexión fallida. Se usó la plantilla demo.',true);}finally{clearTimeout(timer);}}
+import { z } from "zod";
+import {
+  checkDraft,
+  draftSchema,
+  selectDraft,
+  inputSchema,
+  type Input,
+  type Draft,
+} from "../domain/evidence";
+export const SIMULATED = "IA SIMULADA - PLANTILLA DEMO";
+export const REAL = "IA REAL - SOLO CASOS FICTICIOS";
+export type Result = {
+  draft: Draft;
+  mode: typeof SIMULATED | typeof REAL;
+  reason: string;
+  rejected: boolean;
+};
+type Config = {
+  key?: string;
+  model?: string;
+  enabled?: string;
+  fetcher?: typeof fetch;
+  timeout?: number;
+};
+export async function boundedText(response: Response, max: number) {
+  if (!response.body) return "";
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > max) throw new Error("size");
+      chunks.push(value);
+    }
+  } finally {
+    await reader.cancel();
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
+export async function generateNotice(
+  raw: Input,
+  config: Config,
+): Promise<Result> {
+  const input = inputSchema.parse(raw);
+  const fallback = (reason: string, rejected = false): Result => ({
+    draft: checkDraft(input, selectDraft(input)),
+    mode: SIMULATED,
+    reason,
+    rejected,
+  });
+  if (config.enabled !== "true")
+    return fallback(
+      "IA real desactivada. Se seleccionaron frases de la plantilla demo.",
+    );
+  if (!config.key || !config.model)
+    return fallback(
+      "Falta configuración del proveedor. Se usó la plantilla demo.",
+    );
+  if (config.model !== "gemini-2.5-flash-lite")
+    return fallback(
+      "Modelo fuera de la lista permitida. Se usó la plantilla demo.",
+    );
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), config.timeout ?? 8000);
+  try {
+    const response = await (config.fetcher ?? fetch)(
+      `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": config.key,
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [
+              {
+                text: "Select sentence IDs and evidence IDs only from the supplied approved fictional selection. Include every supplied sentence exactly once. Return only the requested JSON structure. Never add prose or identifiers.",
+              },
+            ],
+          },
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: JSON.stringify({
+                    input,
+                    allowedSelection: selectDraft(input),
+                  }),
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+            responseJsonSchema: z.toJSONSchema(draftSchema),
+            maxOutputTokens: 512,
+            temperature: 0,
+          },
+        }),
+      },
+    );
+    if (response.status === 429)
+      return fallback(
+        "Cuota del proveedor agotada. Sin reintentos; se usó la plantilla demo.",
+      );
+    if (!response.ok)
+      return fallback("Proveedor no disponible. Se usó la plantilla demo.");
+    const body = JSON.parse(await boundedText(response, 16384));
+    const text = body.candidates?.[0]?.content?.parts
+      ?.map((p: { text?: string }) => p.text ?? "")
+      .join("");
+    try {
+      return {
+        draft: checkDraft(input, JSON.parse(text)),
+        mode: REAL,
+        reason:
+          "Selección del modelo comprobada contra el catálogo. La IA no verifica las fuentes.",
+        rejected: false,
+      };
+    } catch {
+      return fallback(
+        "Intento de IA rechazado: respuesta inválida o sin respaldo. Se ofrece una plantilla segura.",
+        true,
+      );
+    }
+  } catch {
+    return fallback(
+      controller.signal.aborted
+        ? "Se agotó el tiempo de espera. Se usó la plantilla demo."
+        : "Respuesta del proveedor inválida o conexión fallida. Se usó la plantilla demo.",
+      true,
+    );
+  } finally {
+    clearTimeout(timer);
+  }
+}

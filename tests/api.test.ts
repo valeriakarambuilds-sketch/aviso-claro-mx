@@ -1,18 +1,161 @@
-import {it,expect,vi,afterEach} from 'vitest';
-import {generateNotice,REAL,SIMULATED} from '../src/server/adapter';
-import {handleDraft} from '../src/server/handler';
-import {selectDraft,type Input} from '../src/domain/evidence';
-const input:Input={scenarioId:'A',withheld:[],wording:'direct'};
-const config={enabled:'true',key:'synthetic-test-key',model:'gemini-2.5-flash-lite'};
-const output=(value:unknown)=>Response.json({candidates:[{content:{parts:[{text:JSON.stringify(value)}]}}]});
-afterEach(()=>vi.unstubAllEnvs());
-it('missing key and disabled mode are explicitly simulated',async()=>{expect((await generateNotice(input,{})).mode).toBe(SIMULATED);expect((await generateNotice(input,{enabled:'true'})).reason).toContain('Falta configuración');});
-it('valid live response has real label and only categorical provider payload',async()=>{const fetcher=vi.fn(async()=>output(selectDraft(input)));const r=await generateNotice(input,{...config,fetcher});expect(r.mode).toBe(REAL);const body=JSON.parse((fetcher.mock.calls as unknown as [string,RequestInit][])[0][1].body as string);expect(JSON.parse(body.contents[0].parts[0].text)).toEqual({input,allowedSelection:selectDraft(input)});});
-it('quota has no retry',async()=>{const fetcher=vi.fn(async()=>new Response('',{status:429}));const r=await generateNotice(input,{...config,fetcher});expect(r.mode).toBe(SIMULATED);expect(r.reason).toContain('Cuota');expect(fetcher).toHaveBeenCalledTimes(1);});
-it.each([{sentences:[{id:'SAFE',evidenceIds:['A_LOGIN']}]},{sentences:[{id:'LOGIN',evidenceIds:['B_REPORT']}]},{}])('rejects invalid model output with safe labeled fallback',async value=>{const r=await generateNotice(input,{...config,fetcher:async()=>output(value)});expect(r.rejected).toBe(true);expect(r.mode).toBe(SIMULATED);expect(r.draft).toEqual(selectDraft(input));});
-it('handles malformed JSON, provider error and oversized response',async()=>{for(const response of [new Response('bad json'),new Response('',{status:500}),new Response('x'.repeat(17000))])expect((await generateNotice(input,{...config,fetcher:async()=>response})).mode).toBe(SIMULATED);});
-it('times out provider without retry',async()=>{const fetcher:typeof fetch=(_url,init)=>new Promise((_,reject)=>init?.signal?.addEventListener('abort',()=>reject(new Error('aborted'))));const r=await generateNotice(input,{...config,fetcher,timeout:5});expect(r.reason).toContain('tiempo');});
-const request=(body:string,headers:Record<string,string>={},method='POST')=>new Request('http://localhost/api/draft',{method,headers:{origin:'http://localhost','content-type':'application/json',...headers},...(method==='POST'?{body}:{})});
-it('accepts valid same-origin JSON only',async()=>{vi.stubEnv('GEMINI_ENABLED','false');expect((await handleDraft(request(JSON.stringify(input)))).status).toBe(200);expect((await handleDraft(request('',{},'GET'))).status).toBe(405);expect((await handleDraft(request('{}',{origin:'https://attacker.invalid'}))).status).toBe(403);expect((await handleDraft(request('{}',{'content-type':'text/plain'}))).status).toBe(415);});
-it.each(['{','x'.repeat(2000),JSON.stringify({...input,prompt:'<script>alert(1)</script>'}),JSON.stringify({...input,withheld:['C_FILE']}),JSON.stringify({...input,scenarioId:'D'})])('rejects malformed or disallowed input',async body=>expect((await handleDraft(request(body))).status).toBe(400));
-it('rejects declared oversized input',async()=>expect((await handleDraft(request('{}',{'content-length':'2048'}))).status).toBe(413));
+import { it, expect, vi, afterEach } from "vitest";
+import { generateNotice, REAL, SIMULATED } from "../src/server/adapter";
+import { handleDraft } from "../src/server/handler";
+import { selectDraft, type Input } from "../src/domain/evidence";
+const input: Input = { scenarioId: "A", withheld: [], wording: "direct" };
+const config = {
+  enabled: "true",
+  key: "synthetic-test-key",
+  model: "gemini-2.5-flash-lite",
+};
+const output = (value: unknown) =>
+  Response.json({
+    candidates: [{ content: { parts: [{ text: JSON.stringify(value) }] } }],
+  });
+afterEach(() => vi.unstubAllEnvs());
+it("missing key and disabled mode are explicitly simulated", async () => {
+  expect((await generateNotice(input, {})).mode).toBe(SIMULATED);
+  expect((await generateNotice(input, { enabled: "true" })).reason).toContain(
+    "Falta configuración",
+  );
+});
+it("valid live response has real label and only categorical provider payload", async () => {
+  const fetcher = vi.fn(async () => output(selectDraft(input)));
+  const r = await generateNotice(input, { ...config, fetcher });
+  expect(r.mode).toBe(REAL);
+  const body = JSON.parse(
+    (fetcher.mock.calls as unknown as [string, RequestInit][])[0][1]
+      .body as string,
+  );
+  expect(JSON.parse(body.contents[0].parts[0].text)).toEqual({
+    input,
+    allowedSelection: selectDraft(input),
+  });
+});
+it("quota has no retry", async () => {
+  const fetcher = vi.fn(async () => new Response("", { status: 429 }));
+  const r = await generateNotice(input, { ...config, fetcher });
+  expect(r.mode).toBe(SIMULATED);
+  expect(r.reason).toContain("Cuota");
+  expect(fetcher).toHaveBeenCalledTimes(1);
+});
+it.each([
+  { sentences: [{ id: "SAFE", evidenceIds: ["A_LOGIN"] }] },
+  { sentences: [{ id: "LOGIN", evidenceIds: ["B_REPORT"] }] },
+  {},
+])("rejects invalid model output with safe labeled fallback", async (value) => {
+  const r = await generateNotice(input, {
+    ...config,
+    fetcher: async () => output(value),
+  });
+  expect(r.rejected).toBe(true);
+  expect(r.mode).toBe(SIMULATED);
+  expect(r.draft).toEqual(selectDraft(input));
+});
+it("handles malformed JSON, provider error and oversized response", async () => {
+  for (const response of [
+    new Response("bad json"),
+    new Response("", { status: 500 }),
+    new Response("x".repeat(17000)),
+  ])
+    expect(
+      (
+        await generateNotice(input, {
+          ...config,
+          fetcher: async () => response,
+        })
+      ).mode,
+    ).toBe(SIMULATED);
+});
+it("times out provider without retry", async () => {
+  const fetcher: typeof fetch = (_url, init) =>
+    new Promise((_, reject) =>
+      init?.signal?.addEventListener("abort", () =>
+        reject(new Error("aborted")),
+      ),
+    );
+  const r = await generateNotice(input, { ...config, fetcher, timeout: 5 });
+  expect(r.reason).toContain("tiempo");
+});
+const request = (
+  body: string,
+  headers: Record<string, string> = {},
+  method = "POST",
+) =>
+  new Request("http://localhost/api/draft", {
+    method,
+    headers: {
+      origin: "http://localhost",
+      "content-type": "application/json",
+      ...headers,
+    },
+    ...(method === "POST" ? { body } : {}),
+  });
+it("accepts valid same-origin JSON only", async () => {
+  vi.stubEnv("GEMINI_ENABLED", "false");
+  expect((await handleDraft(request(JSON.stringify(input)))).status).toBe(200);
+  expect((await handleDraft(request("", {}, "GET"))).status).toBe(405);
+  expect(
+    (await handleDraft(request("{}", { origin: "https://attacker.invalid" })))
+      .status,
+  ).toBe(403);
+  expect(
+    (await handleDraft(request("{}", { "content-type": "text/plain" }))).status,
+  ).toBe(415);
+});
+it.each([
+  "{",
+  "x".repeat(2000),
+  JSON.stringify({ ...input, prompt: "<script>alert(1)</script>" }),
+  JSON.stringify({ ...input, withheld: ["C_FILE"] }),
+  JSON.stringify({ ...input, scenarioId: "D" }),
+])("rejects malformed or disallowed input", async (body) =>
+  expect((await handleDraft(request(body))).status).toBe(400),
+);
+it("rejects declared oversized input", async () =>
+  expect(
+    (await handleDraft(request("{}", { "content-length": "2048" }))).status,
+  ).toBe(413));
+
+it("uses actual Host when Next normalizes its internal URL, still rejecting cross-origin", async () => {
+  vi.stubEnv("GEMINI_ENABLED", "false");
+  const body = JSON.stringify(input);
+  expect(
+    (
+      await handleDraft(
+        request(body, {
+          host: "127.0.0.1:3000",
+          origin: "http://127.0.0.1:3000",
+        }),
+      )
+    ).status,
+  ).toBe(200);
+  expect(
+    (
+      await handleDraft(
+        request(body, {
+          host: "127.0.0.1:3000",
+          origin: "http://attacker.invalid",
+          "x-forwarded-host": "attacker.invalid",
+        }),
+      )
+    ).status,
+  ).toBe(403);
+  expect(
+    (
+      await handleDraft(
+        request(body, {
+          host: "127.0.0.1:3000",
+          origin: "https://127.0.0.1:3000",
+        }),
+      )
+    ).status,
+  ).toBe(403);
+  expect(
+    (
+      await handleDraft(
+        request(body, { host: "127.0.0.1:3000", origin: "null" }),
+      )
+    ).status,
+  ).toBe(403);
+});
