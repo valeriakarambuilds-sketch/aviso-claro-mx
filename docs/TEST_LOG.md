@@ -44,7 +44,7 @@ Solo pruebas locales con datos ficticios. No se ha publicado ni realizado la pru
 - `f5e4d8d`: casos ficticios, catálogo y reglas con 12 pruebas.
 - `afeabcf`: pantallas, revisión y exportación.
 - `1f897e8`: adaptador y fallback con 32 pruebas.
-- Siguiente commit: correcciones observadas de CSP/origen, regresiones y formato legible. Su hash se registra en DECISIONS.md en el cierre.
+- `900606a`: correcciones observadas de CSP/origen, regresiones aprobadas, capturas y formato legible.
 
 ## Pendiente externo
 Dos despliegues y retest público (publicación aplazada por la usuaria), prueba de persona en chat nuevo, comparación con plantilla estática, grabación, PDFs de entrega y exportación íntegra de la conversación. No se afirma que estas actividades hayan ocurrido.

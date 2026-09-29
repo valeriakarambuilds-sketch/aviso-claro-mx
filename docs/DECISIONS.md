@@ -21,3 +21,19 @@ Commit these documents before implementation, then give docs/IMPLEMENTATION_PROM
 - Is drafting plus review faster or clearer than a static template?
 - Who would pay per incident, and does that cover human review time?
 - Before real use: designated reviewer identity, legal applicability, privacy model and authenticated roles need validation.
+
+## 29 de septiembre de 2026 — implementación local
+
+- El commit del packet `a4de66e` se conserva sin reescribir historia. Etapas: `f5e4d8d` (reglas), `afeabcf` (pantallas), `1f897e8` (adaptador), `900606a` (correcciones observadas y regresiones).
+- Implementados A/B/C y orientación D. Las fuentes ficticias originales se pueden retirar, pero nunca elevar una sospecha a confirmación. El catálogo limita las variantes y conserva la incertidumbre obligatoria.
+- Tres pantallas en español; revisión por frase y reconocimiento final de la versión vigente. La app no autentica a un revisor independiente. Exportación TXT e impresión locales, ambas marcadas DEMO.
+- Estado solo en memoria, sin formulario de texto libre, identidad, archivos, cuenta, base de datos ni envíos. No se añadió servicio de apoyo a víctimas: D explica la derivación pendiente sin inventar un enlace del equipo.
+- Gemini opcional solo servidor, desactivado. Modelo permitido gemini-2.5-flash-lite, consultado en documentación oficial; elegibilidad de cuenta pendiente. No se configuró clave, facturación o llamada real. El modo simulado explica su razón.
+- Next.js 16.3.7 y Vitest 5.0.2 resolvieron los avisos de auditoría iniciales. CSP con nonce requiere renderizado dinámico. La validación de origen usa el Host real de destino y conserva el protocolo; no confía en X-Forwarded-Host.
+- Resultados: 33/33 pruebas unitarias/integración, 6/6 recorridos de navegador en escritorio/móvil, build de producción y formato correctos. Auditoría npm: cero vulnerabilidades reportadas. TEST_LOG.md describe los dos fallos reales y los retests, sin afirmar verificación independiente de incidentes.
+- Capturas locales preparadas. Prueba de persona, medición frente a plantilla y PDFs de entrega siguen pendientes; no se simularon ni se inventó su resultado. La conversación original debe exportarse desde el cliente para BUILDCHAT.
+- La usuaria pidió no publicar: no se hizo push ni despliegue. No hay remote configurado. La aplicación se inicia solo en 127.0.0.1:3000.
+
+## Primer movimiento de la siguiente sesión
+
+Abrir la aplicación local y usar las seis capturas en un chat nuevo para la prueba de Mariana descrita en el packet; registrar sus respuestas reales y el principal malentendido antes de cambiar la interfaz. Publicar y realizar las dos comprobaciones de despliegue solo cuando la usuaria lo solicite. No se reclama ninguna URL pública ni ahorro de tiempo.
