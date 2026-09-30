@@ -1,6 +1,6 @@
 # Registro de pruebas — 29 de septiembre de 2026
 
-Solo pruebas locales con datos ficticios. No se ha publicado ni realizado la prueba de persona en chat separado.
+Registro cronológico con datos ficticios. Las primeras entradas corresponden a pruebas locales; ver el primer despliegue público del 30/09 al final. El feedback de persona es simulado y reportado por la usuaria.
 
 ## Etapa 1
 - Se conserva `a4de66e`, documentación anterior al código.
@@ -74,3 +74,22 @@ Dos despliegues y retest público (publicación aplazada por la usuaria), prueba
 **Revisión previa a publicación.** Historial original conservado: siete commits previos a este cierre, incluido `a4de66e`. Escaneo de archivos y blobs del historial sin coincidencias para patrones de claves Gemini/GitHub/privadas/Stripe/OpenAI; esto no equivale a una garantía absoluta. No hay .env ni .env.local rastreados ni en el historial. Solo `.env.example`, con clave y modelo vacíos y GEMINI_ENABLED=false. `.vercel/` se ignora y `.vercelignore` excluye entorno local, historial y documentación del bundle de despliegue.
 
 **Publicación autorizada.** El 30/09 la usuaria solicitó GitHub y primer deploy de producción, sustituyendo la instrucción previa de no publicar. Vercel autentica como `valeriakarambuilds-2805` en equipo Hobby. GitHub requiere login por navegador. Se registrarán únicamente URLs y commit verificados después de publicar; todavía no se declara un deploy en esta entrada.
+
+## 30/09/2026 — primer despliegue de producción verificado
+
+- Commit de aplicación desplegado: **`bf35c23c9991676be33529c6dd655a391f5fd417`** (octavo commit, historial original intacto).
+- Producción: **https://aviso-claro-mx.vercel.app**.
+- Despliegue inmutable: https://aviso-claro-i3w0gjbl7-valeriakarambuilds-2805s-projects.vercel.app . Su acceso puede estar protegido por Vercel; la URL pública comprobada es el alias de producción anterior.
+- ID de despliegue: `dpl_HQzAQ8284YvCqGqCvpCBcRiHUFhi`. Creado el 30/09/2026 a las 11:27:49 America/Mexico_City. Vercel `inspect` confirmó `Ready`, destino `production`.
+- Desplegado por CLI desde el árbol limpio del commit indicado; metadato `sourceCommit` fijado al mismo SHA. La conexión GitHub aún está pendiente de autenticar la cuenta; este despliegue no se presenta como un deploy disparado por GitHub.
+- `GEMINI_ENABLED=false` fijado como configuración de producción. No se configuró GEMINI_API_KEY. Respuesta pública: `IA SIMULADA - PLANTILLA DEMO`, motivo «IA real desactivada. Se seleccionaron frases de la plantilla demo.»
+- Antes de subir, `vercel deploy --dry --json` confirmó 30 archivos y excluyó `.env.local`, `.env.example`, `.git`, `.vercel`, `.next`, `node_modules`, `docs` y resultados locales. Vercel había creado `.env.local` al vincular el proyecto; permanece ignorado y no se imprimió su contenido.
+- Auditoría actual de npm: 0 vulnerabilidades reportadas. Solo `.env.example` está rastreado en Git, sin claves; el escaneo del historial no encontró patrones de secretos.
+
+### Comprobación pública sin sesión
+
+Se consultó el alias con HTTP sin Authorization, cookies ni bypass de Vercel: **200**, sin redirigir a login. Se abrió Chromium en dos contextos nuevos con almacenamiento y cookies vacíos, tamaños 1280×900 y 390×844. En ambos se completó el caso A: banner demo y modo simulado visibles, POST `/api/draft` HTTP 200, mismo texto y «Caso ficticio A · Versión 3» en Borrador/Revisión, paneles de Registro de acceso e Impacto en archivos correctos, TXT bloqueado antes de revisar y descargable después de revisar cada frase y marcar el reconocimiento demo. No hubo errores JavaScript. Capturas: `screenshots/production-1280.png` y `screenshots/production-390.png`.
+
+### GitHub pendiente
+
+No hay todavía URL de repositorio ni push que declarar. GitHub CLI confirmó ausencia de sesión y se inició el login oficial por dispositivo; la usuaria debe completar la autorización en https://github.com/login/device. Si el código expira, puede generar uno nuevo ejecutando `/private/tmp/aviso-gh/gh_2.102.0_macOS_arm64/bin/gh auth login --hostname github.com --git-protocol https --web`. Tras autenticar: crear `aviso-claro-mx` con el historial existente, subirlo y ejecutar `vercel git connect` para vincularlo al proyecto Vercel ya creado. No es necesario inventar ni recrear el primer deploy.

@@ -61,3 +61,14 @@ Repetir manualmente en Revisión los clics «Ver respaldo ficticio» y «Estado 
 ### Siguiente paso de esta sesión
 
 Terminar la autenticación de GitHub, crear `aviso-claro-mx`, subir el historial, conectar Vercel y verificar la URL pública en un navegador sin sesión. Registrar commit y URL reales. Después, volver a mostrar las pantallas a la persona simulada; no dar ese retest por realizado.
+
+## 30 de septiembre de 2026 — producción lista; GitHub espera autorización
+
+- Primer deploy real terminado y verificado: https://aviso-claro-mx.vercel.app . Commit desplegado `bf35c23c9991676be33529c6dd655a391f5fd417`, despliegue `dpl_HQzAQ8284YvCqGqCvpCBcRiHUFhi` en estado Ready. El despliegue fue por CLI; todavía no se vinculó un repositorio GitHub.
+- El alias de producción abre sin iniciar sesión: HTTP 200 sin credenciales y dos contextos Chromium nuevos (escritorio/móvil) completan generación, paneles de evidencia, revisión y TXT. Modo público confirmado: IA SIMULADA - PLANTILLA DEMO; GEMINI_ENABLED=false y sin clave Gemini.
+- La cuenta Vercel estaba autenticada; GitHub CLI no. Se pidió a la usuaria completar el login por dispositivo. No se inventa una URL GitHub ni se declara un push inexistente.
+- La verificación de publicación confirmó que los archivos .env locales no se incluyen en Git ni en el bundle de Vercel. `.env.example` continúa como plantilla vacía de clave/modelo. Los commits de documentación posteriores registran los resultados sin cambiar el código desplegado.
+
+### Primer movimiento pendiente
+
+Completar la autenticación de GitHub, crear el repositorio `aviso-claro-mx`, subir todo el historial sin reescribirlo y conectarlo al proyecto Vercel existente. Actualizar los registros con la URL real del repositorio y comprobar si la integración dispara otro despliegue. El retest de comprensión con la persona simulada sigue pendiente; las pruebas automáticas y capturas públicas no lo sustituyen.
