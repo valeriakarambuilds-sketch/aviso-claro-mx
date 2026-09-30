@@ -1,3 +1,4 @@
+import { evidenceNames } from "./evidence-names";
 import { catalog, checkDraft, type Draft, type Input } from "./evidence";
 export type State = {
   input: Input;
@@ -40,11 +41,12 @@ export function exportText(s: State) {
     `Caso ficticio ${s.input.scenarioId} · Versión ${s.version}`,
     "",
     ...d.sentences.map(
-      (s) => `${catalog[s.id].text} [${s.evidenceIds.join(", ")}]`,
+      (s) =>
+        `${catalog[s.id].text} — ${s.evidenceIds.map((id) => `${evidenceNames[id]} [${id}]`).join(", ")}`,
     ),
     "",
-    "Referencias completas: no equivale a hechos verificados de forma independiente.",
-    "Revisión de demostración: no es una autorización autenticada.",
+    "Cada frase tiene una referencia. La app no comprueba que el incidente ocurrió.",
+    "Revisión de demostración: no es una aprobación independiente ni autenticada.",
     "Demo académica, sin atención de casos. No determina obligaciones legales.",
     "Archivo local: no se envía a ninguna persona.",
   ].join("\n");

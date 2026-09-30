@@ -6,6 +6,7 @@ const scenarios = [
     references: [
       {
         id: "A_LOGIN",
+        name: "Registro de acceso",
         title: "Acceso no reconocido",
         source: "Registro ficticio",
         status: "Confirmado por el usuario",
@@ -14,6 +15,7 @@ const scenarios = [
       },
       {
         id: "A_INVESTIGATION",
+        name: "Informe de investigación",
         title: "Investigación iniciada",
         source: "Informe ficticio del proveedor",
         status: "Confirmado por el usuario",
@@ -22,6 +24,7 @@ const scenarios = [
       },
       {
         id: "A_IMPACT",
+        name: "Impacto en archivos",
         title: "Información afectada",
         source: "Sin fuente confirmatoria",
         status: "Sin confirmar",
@@ -35,6 +38,7 @@ const scenarios = [
     references: [
       {
         id: "B_REPORT",
+        name: "Reporte de posible acceso",
         title: "Acceso no reconocido",
         source: "Reporte ficticio sin verificar",
         status: "Reportado, sin verificar",
@@ -43,6 +47,7 @@ const scenarios = [
       },
       {
         id: "B_IMPACT",
+        name: "Impacto en la información",
         title: "Información afectada",
         source: "Sin fuente confirmatoria",
         status: "Sin confirmar",
@@ -56,6 +61,7 @@ const scenarios = [
     references: [
       {
         id: "C_FILE",
+        name: "Registro de consulta de archivo",
         title: "Acceso a un archivo ficticio",
         source: "Registro ficticio",
         status: "Confirmado por el usuario",
@@ -64,6 +70,7 @@ const scenarios = [
       },
       {
         id: "C_THEFT",
+        name: "Extracción sin confirmar",
         title: "Extracción de información",
         source: "Sin fuente confirmatoria",
         status: "Sin confirmar",
@@ -92,15 +99,17 @@ for (const scenario of scenarios) {
     for (const ref of scenario.references) {
       const trigger = page
         .locator(".sentence")
-        .getByRole("button", { name: new RegExp(`^${ref.id} ·`) });
+        .getByRole("button", { name: new RegExp(`^${ref.name} ·`) });
       await trigger.click();
       const panel = page.getByRole("region", {
-        name: `Evidencia ficticia ${ref.id}`,
+        name: `Evidencia ficticia: ${ref.name}`,
         exact: true,
       });
       await expect(panel).toBeVisible();
       await expect(panel.getByRole("heading")).toBeInViewport();
       await expect(panel).toContainText(ref.title);
+      await expect(panel.getByRole("heading")).toHaveText(ref.name);
+      await expect(panel.locator(".record-id")).toContainText(ref.id);
       await expect(panel).toContainText(ref.source);
       await expect(panel).toContainText(ref.status);
       await expect(panel).toContainText(ref.explanation);
@@ -123,12 +132,12 @@ for (const scenario of scenarios) {
     for (const ref of scenario.references) {
       const trigger = page
         .locator(".sentence")
-        .getByRole("button", { name: new RegExp(`^${ref.id} ·`) });
+        .getByRole("button", { name: new RegExp(`^${ref.name} ·`) });
       await trigger.focus();
       await page.keyboard.press("Enter");
       await expect(
         page.getByRole("region", {
-          name: `Evidencia ficticia ${ref.id}`,
+          name: `Evidencia ficticia: ${ref.name}`,
           exact: true,
         }),
       ).toBeVisible();
@@ -150,10 +159,10 @@ test("withdrawn evidence shows current unknown status and keeps the new review",
   await page.getByRole("button", { name: "Ir a revisión" }).click();
   await page.getByLabel("Comparé esta frase").first().check();
   await page
-    .getByRole("button", { name: "A_LOGIN · Estado sin confirmar" })
+    .getByRole("button", { name: "Registro de acceso · Estado sin confirmar" })
     .click();
   const panel = page.getByRole("region", {
-    name: "Evidencia ficticia A_LOGIN",
+    name: "Evidencia ficticia: Registro de acceso",
     exact: true,
   });
   await expect(panel).toBeVisible();

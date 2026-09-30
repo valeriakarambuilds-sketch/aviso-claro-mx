@@ -19,6 +19,7 @@ import {
   type State,
 } from "../domain/workflow";
 import { printHtml } from "../domain/print";
+import { evidenceNames } from "../domain/evidence-names";
 import { EvidenceReference } from "../components/EvidenceReference";
 const events = {
   login: "Acceso no reconocido",
@@ -289,10 +290,22 @@ export default function Home() {
                       : "Evidencias del aviso"}
                   </h3>
                 </div>
+                <div className="example-context">
+                  <p>
+                    Estas selecciones pertenecen al ejemplo ficticio; tú no has
+                    confirmado un incidente real
+                  </p>
+                  {evidence.some((e) => e.event === "investigation") && (
+                    <p>
+                      “Investigación iniciada” es un dato del ejemplo, no una
+                      conclusión automática de la app.
+                    </p>
+                  )}
+                </div>
                 <p>{c.summary}</p>
                 <p className="small">
-                  “Confirmado” significa que el usuario indica tener una fuente.
-                  La app no la autentica.
+                  En el ejemplo, “Confirmado por el usuario” indica una fuente
+                  seleccionada. La app no la autentica.
                 </p>
                 <div className="evidence-list">
                   {evidence.map((e) => (
@@ -301,8 +314,11 @@ export default function Home() {
                       id={`evidence-${e.id}`}
                       className="evidence-card"
                     >
-                      <div className="record-id">{e.id}</div>
-                      <h4>{events[e.event]}</h4>
+                      <h4>{evidenceNames[e.id]}</h4>
+                      <div className="record-id">
+                        Referencia del ejemplo: {e.id}
+                      </div>
+                      <p className="small">{events[e.event]}</p>
                       <span
                         className={`pill ${e.status === "confirmed" ? "teal" : "amber"}`}
                       >
@@ -453,11 +469,8 @@ export default function Home() {
                       ))}
                     </div>
                     <div className="reference-status">
-                      <strong>✓ Referencias completas</strong>
-                      <p>
-                        La estructura cumple las reglas. Esto no verifica de
-                        forma independiente que el incidente ocurrió.
-                      </p>
+                      <strong>Cada frase tiene una referencia</strong>
+                      <p>La app no comprueba que el incidente ocurrió</p>
                     </div>
                     {step === 2 ? (
                       <>
@@ -477,13 +490,18 @@ export default function Home() {
                             <option value="formal">Formal</option>
                           </select>
                         </label>
+                        <p id="another-version-help" className="small">
+                          El texto puede quedar igual. Tendrás que revisarlo
+                          nuevamente
+                        </p>
                         <div className="actions">
                           <button
                             className="secondary"
                             disabled={busy}
                             onClick={generate}
+                            aria-describedby="another-version-help"
                           >
-                            Regenerar
+                            Preparar otra versión
                           </button>
                           <button
                             className="primary"
@@ -497,11 +515,11 @@ export default function Home() {
                     ) : (
                       <>
                         <div className="review-box">
-                          <strong>Ahora actúas como persona revisora</strong>
+                          <strong>Revisión de demostración</strong>
                           <p>
-                            En un caso real, la persona responsable debe
-                            contrastar las fuentes fuera de la app. Aquí una
-                            misma persona representa ambos roles.
+                            En esta demo representarás a la dueña para probar la
+                            revisión. En un caso real, entrega el borrador a la
+                            persona responsable
                           </p>
                           <label className="check">
                             <input
@@ -519,13 +537,13 @@ export default function Home() {
                                 setPrint("");
                               }}
                             />
-                            Revisé el borrador y sus evidencias; apruebo esta
-                            versión demo
+                            Revisé el borrador y sus evidencias en esta
+                            demostración
                           </label>
                           <p className="small">
-                            Es un reconocimiento de demostración, no una
-                            autorización autenticada. Cualquier cambio exige una
-                            nueva revisión.
+                            Esta casilla registra tu revisión en la demo; no es
+                            una aprobación independiente ni autenticada.
+                            Cualquier cambio exige una nueva revisión.
                           </p>
                         </div>
                         <div className="actions">

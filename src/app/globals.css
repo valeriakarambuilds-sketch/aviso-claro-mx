@@ -479,11 +479,15 @@ nav .done span {
   margin-top: 15px;
 }
 .reference-status {
-  padding: 20px 0;
+  padding: 16px;
+  margin: 20px 0;
+  background: #f0f4f6;
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 .reference-status strong {
-  font-size: 13px;
-  color: var(--teal);
+  font-size: 14px;
+  color: var(--ink);
 }
 .reference-status p {
   font-size: 12px;
@@ -737,4 +741,18 @@ footer p {
 .reference-panel dd {
   margin: 4px 0 0;
   color: var(--muted);
+}
+
+.example-context {
+  padding: 14px;
+  background: #f0f4f6;
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+.example-context p {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.example-context p:last-child {
+  margin-bottom: 0;
 }

@@ -15,6 +15,11 @@ it("blocks direct export before review", () => {
 it("exports only a reviewed current version", () => {
   const s = approve(drafted());
   expect(exportText(s)).toContain("DEMO - DATOS FICTICIOS");
+  expect(exportText(s)).toContain("Registro de acceso [A_LOGIN]");
+  expect(exportText(s)).toContain(
+    "Cada frase tiene una referencia. La app no comprueba que el incidente ocurrió.",
+  );
+  expect(exportText(s)).not.toContain("Referencias completas");
   expect(() => exportText({ ...s, version: s.version + 1 })).toThrow();
   expect(() =>
     exportText({ ...s, input: { ...s.input, wording: "formal" } }),

@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { type z } from "zod";
+import { evidenceNames } from "../domain/evidence-names";
 import { evidenceSchema, statusLabels } from "../domain/evidence";
 
 type Evidence = z.infer<typeof evidenceSchema>;
@@ -91,7 +92,7 @@ export function EvidenceReference({
         aria-controls={panelId}
         onClick={() => setOpen(!open)}
       >
-        {evidence.id} ·{" "}
+        {evidenceNames[evidence.id]} ·{" "}
         {evidence.status === "unknown"
           ? "Estado sin confirmar"
           : "Ver respaldo ficticio"}{" "}
@@ -103,12 +104,12 @@ export function EvidenceReference({
           className="reference-panel"
           ref={panel}
           tabIndex={-1}
-          aria-label={`Evidencia ficticia ${evidence.id}`}
+          aria-label={`Evidencia ficticia: ${evidenceNames[evidence.id]}`}
         >
           <p className="eyebrow">DEMO - DATOS FICTICIOS</p>
-          <h4>
-            {evidence.id} · {title}
-          </h4>
+          <h4>{evidenceNames[evidence.id]}</h4>
+          <div className="record-id">Referencia del ejemplo: {evidence.id}</div>
+          <p className="small">{title}</p>
           <span
             className={`pill ${evidence.status === "confirmed" ? "teal" : "amber"}`}
           >

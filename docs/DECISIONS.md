@@ -48,3 +48,16 @@ Abrir la aplicación local y usar las seis capturas en un chat nuevo para la pru
 ### Primer movimiento siguiente
 
 Repetir manualmente en Revisión los clics «Ver respaldo ficticio» y «Estado sin confirmar», también después de aprobar el aviso: el panel debe mostrar el detalle y la aprobación debe conservarse. Después continuar con la prueba de Mariana en chat separado. Los despliegues siguen aplazados hasta que la usuaria los solicite.
+
+## 30 de septiembre de 2026 — feedback simulado y preparación de publicación
+
+- Se completan las cinco correcciones solicitadas tras el primer persona test simulado reportado por la usuaria. No se presenta como entrevista real ni se inventa una segunda pasada. Las aclaraciones separan selección ficticia, referencias y revisión demo de una confirmación real o aprobación independiente.
+- Nombres comprensibles en evidencia, referencias y exportación; códigos como A_LOGIN pasan a detalles secundarios. «Preparar otra versión» explica que el texto puede quedar igual y requiere nueva revisión.
+- No se reprodujo discrepancia de versión/texto entre Borrador y Revisión dentro de una sesión. Hay pruebas de ida y vuelta en A/B/C y de invalidación al generar otra versión con texto idéntico. La lógica de versiones no se alteró.
+- Verificación del 30/09: 33 pruebas Vitest, 22 Playwright, build de producción y formato correctos. Los resultados y el origen simulado del feedback están en TEST_LOG.md.
+- La instrucción de hoy autoriza publicar por primera vez en GitHub y Vercel. Se conserva todo el historial; no se habilita Gemini ni se añade una clave. La cuenta Vercel disponible usa plan Hobby. GitHub necesita autenticación.
+- Solo `.env.example` se versiona como plantilla sin secretos; los entornos locales y `.vercel/` quedan ignorados. La documentación queda en GitHub, fuera del bundle Vercel.
+
+### Siguiente paso de esta sesión
+
+Terminar la autenticación de GitHub, crear `aviso-claro-mx`, subir el historial, conectar Vercel y verificar la URL pública en un navegador sin sesión. Registrar commit y URL reales. Después, volver a mostrar las pantallas a la persona simulada; no dar ese retest por realizado.
