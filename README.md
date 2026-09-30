@@ -46,6 +46,6 @@ El servidor exige JSON y mismo origen, limita entradas a 1 KiB, respuestas a 16 
 
 ## Entrega
 
-Se conserva el commit original `a4de66e`. Consultar `docs/TEST_LOG.md` para resultados reales y `docs/DECISIONS.md` para pendientes. Primera producción publicada el 30/09/2026: https://aviso-claro-mx.vercel.app . Commit de aplicación `bf35c23`; GitHub está pendiente de autorización. Las capturas de `docs/screenshots` son de la app local; no son resultados de la prueba de persona.
+Se conserva el commit original `a4de66e`. Consultar `docs/TEST_LOG.md` para resultados reales y `docs/DECISIONS.md` para pendientes. Primera producción publicada el 30/09/2026: https://aviso-claro-mx.vercel.app . Commit de aplicación `bf35c23`; Repositorio: https://github.com/valeriakarambuilds-sketch/aviso-claro-mx . Conectado al proyecto existente de Vercel. Las capturas de `docs/screenshots` son de la app local; no son resultados de la prueba de persona.
 
 La usuaria reportó feedback del primer test simulado de Mariana y se implementaron sus cinco correcciones. Falta volver a mostrarle las pantallas en el chat de persona. No se ha inventado una segunda pasada, una comparación temporal con la plantilla, un PDF de persona ni un transcript. Guardar/exportar la conversación original desde el cliente para BUILDCHAT; un registro de pruebas no sustituye esa conversación.

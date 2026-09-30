@@ -93,3 +93,14 @@ Se consultó el alias con HTTP sin Authorization, cookies ni bypass de Vercel: *
 ### GitHub pendiente
 
 No hay todavía URL de repositorio ni push que declarar. GitHub CLI confirmó ausencia de sesión y se inició el login oficial por dispositivo; la usuaria debe completar la autorización en https://github.com/login/device. Si el código expira, puede generar uno nuevo ejecutando `/private/tmp/aviso-gh/gh_2.102.0_macOS_arm64/bin/gh auth login --hostname github.com --git-protocol https --web`. Tras autenticar: crear `aviso-claro-mx` con el historial existente, subirlo y ejecutar `vercel git connect` para vincularlo al proyecto Vercel ya creado. No es necesario inventar ni recrear el primer deploy.
+
+## 30/09/2026 — GitHub autenticado, historial subido y Vercel conectado
+
+- GitHub CLI confirmó sesión activa de `valeriakarambuilds-sketch` mediante keyring. No se compartieron ni versionaron credenciales.
+- Repositorio público creado: **https://github.com/valeriakarambuilds-sketch/aviso-claro-mx**.
+- Push inicial a `main` con los **nueve commits existentes**, sin squash, rebase ni force push. La API de GitHub devolvió nueve commits y SHA `27b8ab8c56e1d72a9a4c0ac043a8822b8e126b2f`, idéntico al HEAD local tras ese push. El commit original del packet `a4de66e` sigue en la historia.
+- `origin` apunta al repositorio y `main` sigue `origin/main`. La revisión previa al push confirmó que solo `.env.example` está rastreado; `.env.local` y `.vercel/` permanecen ignorados.
+- `vercel git connect` terminó con **Connected** para este repositorio usando explícitamente el proyecto `aviso-claro-mx` y equipo `valeriakarambuilds-2805s-projects`.
+- Se reutilizó el proyecto existente **`prj_NkxJIrMcarqidDRkxppUYgbMHDqw`**. No se creó otro proyecto ni se ejecutó un deploy manual en esta sesión.
+- Producción conserva el alias **https://aviso-claro-mx.vercel.app**. El primer deploy registrado arriba permanece como evidencia histórica. La integración Git puede generar despliegues automáticos al subir commits posteriores, incluido el presente cierre de documentación.
+- Cambio de esta sesión limitado a integración y documentación; no se modificó el código de aplicación ni se repitió la batería ya aprobada (33 Vitest, 22 Playwright y build). IA simulada y configuración Gemini sin cambios.

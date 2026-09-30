@@ -72,3 +72,14 @@ Terminar la autenticación de GitHub, crear `aviso-claro-mx`, subir el historial
 ### Primer movimiento pendiente
 
 Completar la autenticación de GitHub, crear el repositorio `aviso-claro-mx`, subir todo el historial sin reescribirlo y conectarlo al proyecto Vercel existente. Actualizar los registros con la URL real del repositorio y comprobar si la integración dispara otro despliegue. El retest de comprensión con la persona simulada sigue pendiente; las pruebas automáticas y capturas públicas no lo sustituyen.
+
+## 30 de septiembre de 2026 — integración GitHub completada
+
+- Autenticación GitHub comprobada como `valeriakarambuilds-sketch`. Repositorio público real: https://github.com/valeriakarambuilds-sketch/aviso-claro-mx . Se subieron íntegros los nueve commits existentes a main; API remota y HEAD local coincidieron en `27b8ab8c56e1d72a9a4c0ac043a8822b8e126b2f` antes del cierre documental.
+- Repositorio conectado correctamente al proyecto Vercel existente `aviso-claro-mx`, ID `prj_NkxJIrMcarqidDRkxppUYgbMHDqw`, del equipo `valeriakarambuilds-2805s-projects`. No se creó otro proyecto. La integración habilita los despliegues por cambios en Git.
+- URL pública: https://aviso-claro-mx.vercel.app . Sin cambios al código, a GEMINI_ENABLED=false o al reconocimiento de revisión demo. Credenciales y archivos .env locales no se subieron.
+- Queda resuelto el bloqueo de autenticación descrito en las entradas anteriores. El registro detallado de push y conexión está en TEST_LOG.md.
+
+### Primer movimiento siguiente
+
+Volver a mostrar las pantallas a la persona simulada y registrar la segunda pasada de comprensión. Mantener separados los resultados de persona, pruebas automáticas y despliegues. La publicación y conexión GitHub solicitadas ya están realizadas.
